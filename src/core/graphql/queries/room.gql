@@ -1,0 +1,16 @@
+query Room($id: ObjectId!) {
+  room(id: $id) {
+    name
+    createdBy {
+      email
+    }
+    messages {
+      content
+      createdAt
+      sender {
+        email
+        display_name
+      }
+    }
+  }
+}

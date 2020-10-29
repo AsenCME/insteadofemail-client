@@ -1,0 +1,10 @@
+subscription Message($room: ObjectId!) {
+  newMessage(room: $room) {
+    content
+    createdAt
+    sender {
+      email
+      display_name
+    }
+  }
+}
