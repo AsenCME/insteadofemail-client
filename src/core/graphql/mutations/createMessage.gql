@@ -1,0 +1,17 @@
+mutation CreateMessage(
+  $content: String!
+  $sender: ObjectId!
+  $conversation: ObjectId!
+) {
+  createMessage(
+    conversation: $conversation
+    sender: $sender
+    content: $content
+  ) {
+    _id
+    sender {
+      email
+      display_name
+    }
+  }
+}

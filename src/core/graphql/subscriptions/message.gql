@@ -1,5 +1,5 @@
-subscription Message($room: ObjectId!) {
-  newMessage(room: $room) {
+subscription Message($conversation: ObjectId!) {
+  newMessage(conversation: $conversation) {
     content
     createdAt
     sender {

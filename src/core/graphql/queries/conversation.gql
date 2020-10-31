@@ -1,0 +1,17 @@
+query Conversation($id: ObjectId!) {
+  conversation(id: $id) {
+    _id
+    name
+    createdAt
+    participants {
+      _id
+      email
+      display_name
+    }
+    createdBy {
+      _id
+      email
+      display_name
+    }
+  }
+}

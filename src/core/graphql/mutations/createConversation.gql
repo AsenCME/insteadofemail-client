@@ -1,0 +1,8 @@
+mutation CreateConversation($name: String!, $createdBy: String!) {
+  createConversation(name: $name, createdBy: $createdBy) {
+    _id
+    createdBy {
+      _id
+    }
+  }
+}

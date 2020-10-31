@@ -1,0 +1,5 @@
+mutation JoinConversation($conversation: ObjectId!, $email: String!) {
+  joinConversation(email: $email, conversation: $conversation) {
+    user_id
+  }
+}

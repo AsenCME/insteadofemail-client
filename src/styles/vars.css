@@ -1,0 +1,13 @@
+:root {
+  --easer: cubic-bezier(0.86, 0, 0.07, 1);
+  --primary: white;
+  --secondary: black;
+  --error: red;
+}
+
+.primary__text {
+  color: var(--primary);
+}
+.secondary__text {
+  color: var(--secondary);
+}

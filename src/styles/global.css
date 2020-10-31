@@ -1,0 +1,66 @@
+/* Button Styles */
+button {
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: transparent;
+  border: 1px solid var(--secondary);
+  transition: 0.1s cubic-bezier(0.86, 0, 0.07, 1);
+}
+button:hover {
+  color: var(--primary);
+  background-color: var(--secondary);
+}
+
+button.dark {
+  outline: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 1px solid var(--primary);
+  transition: 0.1s cubic-bezier(0.86, 0, 0.07, 1);
+}
+button.dark:hover {
+  color: var(--secondary);
+  background-color: var(--primary);
+  border: 1px solid transparent;
+}
+
+/* Spacers */
+div.spacer {
+  height: 20px;
+}
+
+/* Input Styles */
+input {
+  outline: none;
+  font-size: 18px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  border: 1px solid var(--secondary);
+}
+input.invalid {
+  border: 1px solid var(--error);
+}
+
+input.dark {
+  outline: none;
+  font-size: 18px;
+  padding: 8px 16px;
+  border-radius: 5px;
+  color: var(--primary);
+  background-color: transparent;
+  border: 1px solid var(--primary);
+}
+
+.error-message {
+  font-weight: bold;
+  color: var(--error);
+}

@@ -1,0 +1,10 @@
+query Messages($conversation: ObjectId!, $createdBefore: Float) {
+  messages(conversation: $conversation, createdBefore: $createdBefore) {
+    content
+    createdAt
+    sender {
+      email
+      display_name
+    }
+  }
+}
