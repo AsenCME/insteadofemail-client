@@ -9,11 +9,13 @@ import {
 import { WebSocketLink } from "@apollo/client/link/ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 
-const httpLink = new HttpLink({
-  uri: "http://localhost:8000/",
-});
+const api_base_http = process.env.API_BASE_HTTP || "http://localhost:8000/";
+const api_base_ws =
+  process.env.API_BASE_WS || "ws://localhost:8000/subscriptions";
+
+const httpLink = new HttpLink({ uri: api_base_http });
 const wsLink = new WebSocketLink({
-  uri: "ws://localhost:8000/subscriptions",
+  uri: api_base_ws,
   options: { reconnect: true },
 });
 
