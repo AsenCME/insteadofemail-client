@@ -1,4 +1,11 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, {
+  createRef,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   useMessageSubscription,
   useConversationQuery,
@@ -10,6 +17,8 @@ import {
   Message,
   User,
 } from "../../core/types";
+import { Button } from "../../core/ui";
+import { conv_key, user_key } from "../../core/utils/constants";
 import { JoinConversation } from "./components/JoinConversation";
 import { MessageInput } from "./components/MessageInput";
 
@@ -19,6 +28,7 @@ type Props = {
 };
 export const Conversation: React.FC<Props> = ({ conversation_id, user_id }) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const msgsContainer = createRef<HTMLDivElement>();
 
   // Queries + Mutations
   const { data: conversationData, loading, error } = useConversationQuery({
@@ -39,15 +49,17 @@ export const Conversation: React.FC<Props> = ({ conversation_id, user_id }) => {
   // Effects
   useEffect(() => {
     if (messagesData?.messages) {
-      const retrievedMessages = messagesData.messages.map(
-        x =>
-          ({
-            sender: x.sender,
-            content: x.content,
-            createdAt: x.createdAt,
-          } as Message),
-      );
-      setMessages(prevMessages => [...retrievedMessages, ...prevMessages]);
+      const retrievedMessages = messagesData.messages
+        .map(
+          x =>
+            ({
+              sender: x.sender,
+              content: x.content,
+              createdAt: x.createdAt,
+            } as Message),
+        )
+        .sort((a, b) => a.createdAt - b.createdAt);
+      setMessages(retrievedMessages);
     }
   }, [messagesData]);
 
@@ -63,12 +75,34 @@ export const Conversation: React.FC<Props> = ({ conversation_id, user_id }) => {
   }, [subData]);
 
   useLayoutEffect(() => {
-    window.scrollTo(0, 0);
+    const el = msgsContainer.current;
+    if (el) {
+      const height = el.clientHeight;
+      window.scrollTo(0, height);
+    }
+  }, [msgsContainer, messages]);
+
+  useEffect(() => {
     window.onscroll = () => {
       const offset = window.pageYOffset;
-      console.log(offset);
+      if (offset === 0) {
+        // TODO: Get more messages from before
+      }
+    };
+    return () => {
+      window.onscroll = null;
     };
   }, []);
+
+  // Functions
+  const getLink = useCallback(() => {
+    const base = window.location.origin;
+    const query = `?${conv_key}=${conversation_id}&${user_key}=${user_id}`;
+    const link = base + query;
+    console.log(link);
+    navigator.clipboard.writeText(link);
+    alert("Link copied");
+  }, [conversation_id, user_id]);
 
   // Shortcuts
   const conversation = useMemo(
@@ -112,26 +146,37 @@ export const Conversation: React.FC<Props> = ({ conversation_id, user_id }) => {
           </span>
         </div>
         <div>{participants}</div>
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            style={{
-              marginTop: 10,
-              padding: "10px 20px",
-              border: "1px solid black",
-            }}
-          >
-            <div style={{ fontSize: 12, fontWeight: "bold", color: "gray" }}>
-              {m.sender.display_name || m.sender.email}
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Button text="Get link" onClick={() => getLink()} />
+        </div>
+        <div ref={msgsContainer}>
+          {messages.map((m, i) => (
+            <div
+              key={i}
+              style={{
+                marginTop: 10,
+                padding: "10px 20px",
+                border: "1px solid black",
+              }}
+            >
+              <div style={{ fontSize: 12, fontWeight: "bold", color: "gray" }}>
+                {m.sender.display_name || m.sender.email}
+              </div>
+              <div style={{ marginTop: 5, marginBottom: 5 }}>{m.content}</div>
+              <div style={{ fontSize: 14, fontWeight: 300 }}>
+                <span>{new Date(m.createdAt).toLocaleDateString()}</span>
+                <span> at </span>
+                <span>{new Date(m.createdAt).toLocaleTimeString()}</span>
+              </div>
             </div>
-            <div style={{ marginTop: 5, marginBottom: 5 }}>{m.content}</div>
-            <div style={{ fontSize: 14, fontWeight: 300 }}>
-              <span>{new Date(m.createdAt).toLocaleDateString()}</span>
-              <span> at </span>
-              <span>{new Date(m.createdAt).toLocaleTimeString()}</span>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <MessageInput user={currentUser} conversation_id={conversation_id} />
     </div>
